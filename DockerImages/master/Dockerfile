@@ -1,4 +1,4 @@
-FROM jmeterbase
+FROM naughtyth/jmeter-base
 
 ADD pruebas.jmx pruebas.jmx
 

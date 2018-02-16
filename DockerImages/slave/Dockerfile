@@ -1,4 +1,4 @@
-FROM jmeterbase
+FROM naughtyth/jmeter-base
 
 # Ports to be exposed from the container for JMeter Slaves/Server
 EXPOSE 1099 50000
