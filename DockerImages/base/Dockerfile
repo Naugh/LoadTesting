@@ -5,7 +5,7 @@ FROM alpine
 ARG JMETER_VERSION=3.3
 
 # Install few utilities
-RUN apk add --update openjdk8-jre-base
+RUN apk add --update --no-cache openjdk8-jre-base
 
 # Install JMeter
 RUN   mkdir /jmeter \
