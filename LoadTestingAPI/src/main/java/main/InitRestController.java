@@ -22,20 +22,6 @@ public class InitRestController {
 			e.printStackTrace();
 			return false;
 		}
-		
-	}
-	
-	@RequestMapping(value = "/version", method = RequestMethod.GET)
-	public boolean get(){
-		try {
-			DockerUtils.showVersion();
-			return true;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
-		
 	}
 
 }

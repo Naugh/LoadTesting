@@ -26,6 +26,7 @@ public class FileRestController {
 
 		// DockerUtils.setFile(uploadfile.getInputStream());
 		DockerUtils.setFile(uploadfile);
+		DockerUtils.startMaster();
 		// saveUploadedFiles(Arrays.asList(uploadfile));
 
 		// return new ResponseEntity("Successfully uploaded - " +
@@ -40,7 +41,6 @@ public class FileRestController {
 		// BufferedInputStream(file.getInputStream());
 		// logger.debug("Single file upload!");
 		File curDir = new File("files");
-		getAllFiles(curDir);
 
 		// DockerUtils.setFile(uploadfile.getInputStream());
 		// saveUploadedFiles(Arrays.asList(uploadfile));
@@ -50,17 +50,10 @@ public class FileRestController {
 		return true;
 
 	}
-
-	private static void getAllFiles(File curDir) {
-
-		File[] filesList = curDir.listFiles();
-		for (File f : filesList) {
-			/*
-			 * if(f.isDirectory()) getAllFiles(f); if(f.isFile()){
-			 */
-			System.out.println(f.getName());
-			// }
-		}
-
+	
+	@RequestMapping(value = "/path", method = RequestMethod.GET)
+	public void showPath(){
+		DockerUtils.showPath();
 	}
+
 }

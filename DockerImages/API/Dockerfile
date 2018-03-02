@@ -3,7 +3,8 @@ FROM alpine
 
 # Install java and docker
 RUN apk add --update --no-cache openjdk8-jre-base docker \
-	&& mkdir files
+	&& mkdir files \
+	&& mkdir results
 
 #Get API
 #ADD LoadTestingAPI.jar LoadTestingAPI.jar
@@ -12,8 +13,9 @@ ADD https://raw.githubusercontent.com/Naugh/LoadTesting/master/DockerImages/API/
 #Set docker host
 ENV DOCKER_HOST tcp://0.0.0.0:2375
 
-#Create volume
+#Create volumes
 VOLUME ["/files"] 
+VOLUME ["/results"] 
 
 EXPOSE 8080
 
