@@ -15,7 +15,6 @@ ENV DOCKER_HOST tcp://0.0.0.0:2375
 
 #Create volumes
 VOLUME ["/files"] 
-VOLUME ["/results"] 
 
 EXPOSE 8080
 

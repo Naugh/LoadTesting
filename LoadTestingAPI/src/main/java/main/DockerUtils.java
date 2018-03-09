@@ -21,9 +21,11 @@ import com.spotify.docker.client.messages.HostConfig;
 public class DockerUtils {
 
 	private final static String JMETER_BASE = "naughtyth/jmeter-base";
-	//private final static String JMETER_MASTER = "naughtyth/jmeter-master";
-	private final static String JMETER_MASTER = "jmeter-master";
+	private final static String JMETER_MASTER = "naughtyth/jmeter-master";
 	private final static String JMETER_SLAVE = "naughtyth/jmeter-slave";
+	
+	private final static String INPUT_PATH = "/files/test.jmx";
+	private final static String RESULT_PATH = "/files/results.csv";
 
 	private static DockerClient docker = null;
 
@@ -93,9 +95,10 @@ public class DockerUtils {
 	public static String createContainer(String img, String tag, boolean isMaster)
 			throws DockerException, InterruptedException {
 		ContainerConfig config = null;
-		if (isMaster) {
+		//if (isMaster) {
+		if(img.equals(JMETER_MASTER)){
 			HostConfig hostConfig = HostConfig.builder().volumesFrom(api).build();
-			config = ContainerConfig.builder().image(img).env("IPSlaves="+ipSlaves).hostConfig(hostConfig).build();
+			config = ContainerConfig.builder().image(img).env("IPSLAVES="+ipSlaves).hostConfig(hostConfig).build();
 		} else {
 			config = ContainerConfig.builder().image(img).build();
 		}
@@ -119,7 +122,7 @@ public class DockerUtils {
 
 	public static void setFile(MultipartFile uploadfile) {
 		try {
-			File dest = new File("/files/test.jmx");
+			File dest = new File(INPUT_PATH);
 			if(dest.exists())
 				dest.delete();
 			uploadfile.transferTo(dest);
@@ -158,17 +161,18 @@ public class DockerUtils {
 		}
 	}
 	
-	public static void showPath(){
+	public static String showPath(){
 			File curDir = new File("/files");
-
 			File[] filesList = curDir.listFiles();
+			String names = "";
 			for (File f : filesList) {
 				/*
 				 * if(f.isDirectory()) getAllFiles(f); if(f.isFile()){
 				 */
-				System.out.println(f.getName());
+				names+=f.getName()+"\n";
 				// }
 			}
+			return names;
 
 	}
 	
@@ -183,9 +187,23 @@ public class DockerUtils {
 	public static void startMaster(){
 		try {
 			docker.startContainer(master);
+			docker.waitContainer(master);
 		} catch (DockerException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public static void waitMaster(){
+		try {
+			docker.waitContainer(master);
+		} catch (DockerException | InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static File getResultFile(){
+		return new File(RESULT_PATH);
 	}
 }
