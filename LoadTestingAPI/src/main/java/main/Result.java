@@ -1,7 +1,17 @@
 package main;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Result {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
+	
 	private String timeStamp = null;
 	private String elapsed = null;
 	private String label = null;
@@ -19,6 +29,8 @@ public class Result {
 	private String idleTime = null;
 	private String connect = null;
 
+	public Result(){
+	}
 
 	public Result(String timeStamp, String elapsed, String label, String responseCode, String responseMessage,
 			String threadName, String dataType, String success, String failureMessage, String bytes, String sentBytes,

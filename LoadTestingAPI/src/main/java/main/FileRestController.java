@@ -1,7 +1,5 @@
 package main;
 
-import java.io.File;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileRestController {
 
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile uploadfile) {
+	public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile uploadfile) {
 		// InputStream inputStream = new
 		// BufferedInputStream(file.getInputStream());
 		// logger.debug("Single file upload!");
@@ -23,7 +21,7 @@ public class FileRestController {
 		if (uploadfile.isEmpty()) {
 			// return new ResponseEntity("please select a file!",
 			// HttpStatus.OK);
-			return new ResponseEntity("There is not a file!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("There is not a file!", HttpStatus.BAD_REQUEST);
 		}
 
 		// DockerUtils.setFile(uploadfile.getInputStream());
@@ -32,7 +30,7 @@ public class FileRestController {
 
 		// return new ResponseEntity("Successfully uploaded - " +
 		// uploadfile.getOriginalFilename(), new HttpHeaders(), HttpStatus.OK);
-		return new ResponseEntity(uploadfile.getName() + " uploaded correctly", HttpStatus.OK);
+		return new ResponseEntity<String>(uploadfile.getName() + " uploaded correctly", HttpStatus.OK);
 
 	}
 

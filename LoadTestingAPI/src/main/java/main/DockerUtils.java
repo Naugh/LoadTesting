@@ -73,7 +73,7 @@ public class DockerUtils {
 		}
 		if (master == null) {
 			try {
-				//docker.pull(JMETER_MASTER);
+				docker.pull(JMETER_MASTER);
 				//TODO 
 				//quitar el if api -TEST-
 				if (api != null)
@@ -186,8 +186,10 @@ public class DockerUtils {
 	
 	public static void startMaster(){
 		try {
+			System.out.println("Processing file");
 			docker.startContainer(master);
 			docker.waitContainer(master);
+			System.out.println("File processed");
 		} catch (DockerException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -204,6 +206,7 @@ public class DockerUtils {
 	}
 	
 	public static File getResultFile(){
+		startMaster();
 		return new File(RESULT_PATH);
 	}
 }
