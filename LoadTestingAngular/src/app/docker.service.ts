@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 import { environment } from '../environments/environment';
@@ -14,7 +14,15 @@ export class DockerService {
   constructor(private http: Http) { }
     
   initSlaves(n:number){
-    return this.http.post(environment.API, n)
+    console.log("CALLING TO " + environment.API+"init");
+    let h = new Headers({
+      'Content-Type': 'application/json'
+    }); 
+
+    let options = new RequestOptions({
+      headers: h
+    });
+    return this.http.post(environment.API+"init", n, options)
     .map(response => response.json())
     .catch(error => this.handleError(error));
   }
