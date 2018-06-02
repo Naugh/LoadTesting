@@ -1,5 +1,9 @@
 <p>
   Number of remote containers
-  <input [(ngModel)] = "slaves" name="name" type="text" id="inputEmail">
+  <input [(ngModel)] = "slaves" type="text">
    <button type="button" (click)="initDocker()">Start</button>
+</p>
+<p>
+  File to upload
+  <input type="file" (change)= "handleFileSelect($event)" #fileInput>
 </p>
