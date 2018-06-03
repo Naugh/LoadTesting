@@ -206,7 +206,11 @@ public class DockerUtils {
 	}
 	
 	public static File getResultFile(){
+		File f = new File(RESULT_PATH);
+		if(f.exists()){
+			f.delete();
+		}
 		startMaster();
-		return new File(RESULT_PATH);
+		return f;
 	}
 }
