@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 import { environment } from '../environments/environment';
 import { formatDate } from '@angular/common';
+import {JMeterResult} from "./j-meter-result.model";
 
 @Injectable({
   providedIn: 'root'
@@ -49,6 +50,13 @@ export class DockerService {
 
     return this.http.post(environment.API+"file", formdata, options)
     //.map(response => response.json())
+    .catch(error => this.handleError(error));
+  }
+
+  getResultFile(){
+    let response: JMeterResult;
+    return this.http.get(environment.API+"result")
+    .map(response => response.json())
     .catch(error => this.handleError(error));
   }
  /* addPerson(person: Person) {
