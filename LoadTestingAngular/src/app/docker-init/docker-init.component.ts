@@ -9,15 +9,41 @@ import {JMeterResult} from "../j-meter-result.model";
 })
 export class DockerInitComponent implements OnInit {
 
-  private slaves: number;
-  private file: String;
-  private testName: String;
-  private test: JMeterResult;
 
   constructor(private dockerService: DockerService) { }
 
   ngOnInit() {
   }
+
+  private slaves: number;
+  private file: String;
+  private testName: String;
+  private test: JMeterResult;
+  private spinner:boolean = false;
+
+  //Chart variables
+  private lineChartLabels:Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];;
+  private lineChartOptions:any = {
+    responsive: true
+  };
+  private lineChartData:Array<any>=[{
+    data: [65, 59, 80, 81, 56, 55, 40],
+    label: 'init'
+  }];
+  private dataChart:Array<any>;
+  public lineChartColors:Array<any> = [
+    {
+      backgroundColor: 'rgba(148,159,177,0.2)',
+      borderColor: 'rgba(148,159,177,1)',
+      pointBackgroundColor: 'rgba(148,159,177,1)',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+    }
+  ];
+  public lineChartLegend:boolean = true;
+  public lineChartType:string = 'line';
+
 
   initDocker() {
     this.dockerService.initSlaves(this.slaves).subscribe(
@@ -29,16 +55,9 @@ export class DockerInitComponent implements OnInit {
     var files = evt.target.files;
     var file = files[0];
     console.log(file.name);
-
-
-
     //vigilar extension que sea de jmeter!!
 
     if (files && file) {
-      //var reader = new FileReader();
-      //reader.onload =this._handleReaderLoaded.bind(this);
-      //reader.readAsBinaryString(file);
-
       this.dockerService.uploadFile(file).subscribe(
         error => console.error(error)
       )
@@ -46,6 +65,7 @@ export class DockerInitComponent implements OnInit {
   }
 
   startTest() {
+    this.spinner=true;
     let  jmeterResult: JMeterResult = {
       name:  this.testName
     }
@@ -59,50 +79,25 @@ export class DockerInitComponent implements OnInit {
 
   resultComplete(){
     console.log("RESULT");
-    //console.log(this.test.systemDate);
     console.log(this.test);
+    this.dataChart = [];
+    this.lineChartLabels.length = 0;
+    for(var i = 0; i < this.test.results.length; i++){
+      this.dataChart.push(this.test.results[i].latency);
+      this.lineChartLabels.push(i);
+    }
+    this.lineChartData = [{
+      data: this.dataChart,
+      label: 'test'
+    }]
+    this.spinner=false;
   }
 
-  /*
-    loadRestaurants(){
-      this.loadButton=false;
-      this.spinner=true;
-      this.restaurantService.getRestaurants(this.page).subscribe(
-        data => this.getData(data),
-        error => console.log(error)
-      );
-      this.page++;      
-    }
-  */
-
-  _handleReaderLoaded(readerEvt) {
-    this.file = readerEvt.target.result;
-    //console.log(this.file.name);
+  public chartClicked(e:any):void {
+    console.log(e);
   }
-
-  /*
-    _handleReaderLoaded(readerEvt) {
-     var binaryString = readerEvt.target.result;
-            this.imgBase64= btoa(binaryString);
-    }
-  */
-
-  /*
-    nFileChange(event) {
-      let reader = new FileReader();
-      if(event.target.files && event.target.files.length > 0) {
-        let file = event.target.files[0];
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-          this.form.get('avatar').setValue({
-            filename: file.name,
-            filetype: file.type,
-            value: reader.result.split(',')[1]
-          })
-        };
-      }
-    }*/
-
-
-
+ 
+  public chartHovered(e:any):void {
+    console.log(e);
+  }
 }

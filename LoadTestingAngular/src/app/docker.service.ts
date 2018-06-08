@@ -11,8 +11,6 @@ import {JMeterResult} from "./j-meter-result.model";
 })
 export class DockerService {
 
-
-
   constructor(private http: Http) { }
     
   initSlaves(n:number){
@@ -34,13 +32,7 @@ export class DockerService {
     let formdata: FormData = new FormData();
     formdata.append('file', file, file.name);
 
-
-    /*let h = new Headers({
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }); 
-*/
     let h = new Headers({
-     // 'Content-Type': 'multipart/form-data',
       'Accept': 'application/json'
     }); 
 
@@ -49,7 +41,6 @@ export class DockerService {
     });
 
     return this.http.post(environment.API+"file", formdata, options)
-    //.map(response => response.json())
     .catch(error => this.handleError(error));
   }
 
@@ -59,12 +50,6 @@ export class DockerService {
     .map(response => response.json())
     .catch(error => this.handleError(error));
   }
- /* addPerson(person: Person) {
-  return this.http.post(URL, person)
-    .map(response => response.json())
-    .catch(error => this.handleError(error));
-}
-*/
 
   private handleError(error: any) {
   console.error(error);

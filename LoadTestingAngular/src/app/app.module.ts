@@ -7,20 +7,20 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import { DockerInitComponent } from './docker-init/docker-init.component';
-import { ChartComponent } from './chart/chart.component';
+import { SpinnerModule } from '@tsmean/spinner';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DockerInitComponent,
-    ChartComponent
+    DockerInitComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     ChartsModule,
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    SpinnerModule.forRoot({})
   ],
   providers: [],
   bootstrap: [AppComponent]
