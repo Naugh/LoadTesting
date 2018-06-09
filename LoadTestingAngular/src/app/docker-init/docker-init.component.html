@@ -1,16 +1,18 @@
 <div>
 <p>
   Number of remote containers
-  <input [(ngModel)] = "slaves" type="text">
    <button type="button" (click)="initDocker()">Start</button>
+  <input [(ngModel)] = "slaves" type="text" pattern="^\d+$" #uname="ngModel">
+  <span *ngIf="uname.errors?.pattern"> Must be a number</span>
 </p>
 <p>
   File to upload
-  <input type="file" (change)= "handleFileSelect($event)" #fileInput>
+  <input type="file" [disabled] = "spinner" (change)= "handleFileSelect($event)" #fileInput>
+  <span *ngIf="fileWrongExtension"> Must be a jmx file</span>
 </p>
 
 <p>
-   <button type="button" (click)="startTest()" [disabled]="spinner">Start Test</button>
+   <button type="button" (click)="startTest()" [disabled]="uname.errors?.pattern || startControl()">Start Test</button>
    <spinner *ngIf="spinner"></spinner>
 </p>
 </div>

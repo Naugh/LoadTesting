@@ -13,22 +13,25 @@ export class DockerInitComponent implements OnInit {
   constructor(private dockerService: DockerService) { }
 
   ngOnInit() {
+    console.log(this.startControl());
   }
 
-  private slaves: number;
+  private slaves: number|string = 1;
   private file: String;
   private testName: String;
   private test: JMeterResult;
   private spinner:boolean = false;
+  private fileLoaded:boolean = false;
+  private fileWrongExtension:boolean = false;
 
   //Chart variables
-  private lineChartLabels:Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];;
+  private lineChartLabels:Array<any> = [];
   private lineChartOptions:any = {
     responsive: true
   };
   private lineChartData:Array<any>=[{
-    data: [65, 59, 80, 81, 56, 55, 40],
-    label: 'init'
+    data: [],
+    label: ''
   }];
   private dataChart:Array<any>;
   public lineChartColors:Array<any> = [
@@ -46,7 +49,7 @@ export class DockerInitComponent implements OnInit {
 
 
   initDocker() {
-    this.dockerService.initSlaves(this.slaves).subscribe(
+    this.dockerService.initSlaves(+this.slaves).subscribe(
       error => console.error(error)
     )
   }
@@ -56,12 +59,18 @@ export class DockerInitComponent implements OnInit {
     var file = files[0];
     console.log(file.name);
     //vigilar extension que sea de jmeter!!
+    this.fileWrongExtension = file.name.split('.').pop() != 'jmx'
 
-    if (files && file) {
+    if (files && file && !this.fileWrongExtension) {
       this.dockerService.uploadFile(file).subscribe(
         error => console.error(error)
       )
+      this.fileLoaded = true;
     }
+  }
+
+  startControl(){
+    return this.spinner || !this.fileLoaded || this.slaves == '';
   }
 
   startTest() {
