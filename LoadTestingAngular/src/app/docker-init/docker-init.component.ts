@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DockerService } from '../docker.service';
-import {JMeterResult} from "../j-meter-result.model";
+import { JMeterResult } from "../j-meter-result.model";
 
 @Component({
   selector: 'app-docker-init',
@@ -16,25 +16,25 @@ export class DockerInitComponent implements OnInit {
     console.log(this.startControl());
   }
 
-  private slaves: number|string = 1;
+  public slaves: number | string = 1;
   private file: String;
   private testName: String;
   private test: JMeterResult;
-  private spinner:boolean = false;
-  private fileLoaded:boolean = false;
-  private fileWrongExtension:boolean = false;
+  public spinner: boolean = false;
+  private fileLoaded: boolean = false;
+  public fileWrongExtension: boolean = false;
 
   //Chart variables
-  private lineChartLabels:Array<any> = [];
-  private lineChartOptions:any = {
+  public lineChartLabels: Array<any> = [];
+  public lineChartOptions: any = {
     responsive: true
   };
-  private lineChartData:Array<any>=[{
+  public lineChartData: Array<any> = [{
     data: [],
     label: ''
   }];
-  private dataChart:Array<any>;
-  public lineChartColors:Array<any> = [
+  public dataChart: Array<any>;
+  public lineChartColors: Array<any> = [
     {
       backgroundColor: 'rgba(148,159,177,0.2)',
       borderColor: 'rgba(148,159,177,1)',
@@ -44,21 +44,19 @@ export class DockerInitComponent implements OnInit {
       pointHoverBorderColor: 'rgba(148,159,177,0.8)'
     }
   ];
-  public lineChartLegend:boolean = true;
-  public lineChartType:string = 'line';
+  public lineChartLegend: boolean = true;
+  public lineChartType: string = 'line';
 
 
   initDocker() {
-    this.dockerService.initSlaves(+this.slaves).subscribe(
-      error => console.error(error)
-    )
+
   }
 
   handleFileSelect(evt) {
     var files = evt.target.files;
     var file = files[0];
     console.log(file.name);
-    //vigilar extension que sea de jmeter!!
+
     this.fileWrongExtension = file.name.split('.').pop() != 'jmx'
 
     if (files && file && !this.fileWrongExtension) {
@@ -69,29 +67,36 @@ export class DockerInitComponent implements OnInit {
     }
   }
 
-  startControl(){
+  startControl() {
     return this.spinner || !this.fileLoaded || this.slaves == '';
   }
 
   startTest() {
-    this.spinner=true;
-    let  jmeterResult: JMeterResult = {
-      name:  this.testName
-    }
-    this.dockerService.getResultFile().subscribe(
-      response => this.test = response,
-      error => console.log(error),
-      () => this.resultComplete()
+    this.spinner = true;
+    this.dockerService.initSlaves(+this.slaves).subscribe(
+      response => this.getResults(response)
     )
-
   }
 
-  resultComplete(){
+  getResults(response) {
+    if (response) {
+      let jmeterResult: JMeterResult = {
+        name: this.testName
+      }
+      this.dockerService.getResultFile().subscribe(
+        response => this.test = response,
+        error => console.log(error),
+        () => this.resultComplete()
+      )
+    }
+  }
+
+  resultComplete() {
     console.log("RESULT");
     console.log(this.test);
     this.dataChart = [];
     this.lineChartLabels.length = 0;
-    for(var i = 0; i < this.test.results.length; i++){
+    for (var i = 0; i < this.test.results.length; i++) {
       this.dataChart.push(this.test.results[i].latency);
       this.lineChartLabels.push(i);
     }
@@ -99,14 +104,14 @@ export class DockerInitComponent implements OnInit {
       data: this.dataChart,
       label: 'test'
     }]
-    this.spinner=false;
+    this.spinner = false;
   }
 
-  public chartClicked(e:any):void {
+  public chartClicked(e: any): void {
     console.log(e);
   }
- 
-  public chartHovered(e:any):void {
+
+  public chartHovered(e: any): void {
     console.log(e);
   }
 }

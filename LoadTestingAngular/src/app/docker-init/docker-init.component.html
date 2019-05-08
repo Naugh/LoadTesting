@@ -1,45 +1,41 @@
 <div>
-<p>
-  Number of remote containers
-   <button type="button" (click)="initDocker()">Start</button>
-  <input [(ngModel)] = "slaves" type="text" pattern="^\d+$" #uname="ngModel">
-  <span *ngIf="uname.errors?.pattern"> Must be a number</span>
-</p>
-<p>
-  File to upload
-  <input type="file" [disabled] = "spinner" (change)= "handleFileSelect($event)" #fileInput>
-  <span *ngIf="fileWrongExtension"> Must be a jmx file</span>
-</p>
+  <p>
+    Number of remote containers
+    <input [(ngModel)]="slaves" type="text" pattern="^\d+$" #uname="ngModel">
+    <span *ngIf="uname.errors?.pattern"> Must be a number</span>
+  </p>
+  <p>
+    File to upload
+    <input type="file" [disabled]="spinner" (change)="handleFileSelect($event)" #fileInput>
+    <span *ngIf="fileWrongExtension"> Must be a jmx file</span>
+  </p>
 
-<p>
-   <button type="button" (click)="startTest()" [disabled]="uname.errors?.pattern || startControl()">Start Test</button>
-   <spinner *ngIf="spinner"></spinner>
-</p>
+  <p>
+    <button type="button" (click)="startTest()" [disabled]="uname.errors?.pattern || startControl()">Start Test</button>
+    <spinner *ngIf="spinner"></spinner>
+  </p>
 </div>
 <!-- CHART -->
-<div class="row">
+<div *ngIf="!spinner">
   Grafica
-<div class="col-md-6">
-  <div style="display: block;">
-  <canvas baseChart width="800" height="800"
-              [datasets]="lineChartData"
-              [labels]="lineChartLabels"
-              [options]="lineChartOptions"
-              [colors]="lineChartColors"
-              [legend]="lineChartLegend"
-              [chartType]="lineChartType"
-              (chartHover)="chartHovered($event)"
-              (chartClick)="chartClicked($event)"></canvas>
+  <div>
+    <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
+      [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType"
+      (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
   </div>
-</div>
-<!--<div class="col-md-6" style="margin-bottom: 10px">
-  <table class="table table-responsive table-condensed">
-    <tr>
-      <th *ngFor="let label of lineChartLabels">{{label}}</th>
-    </tr>
-    <tr *ngFor="let d of lineChartData">
-      <td *ngFor="let label of lineChartLabels; let j=index">{{d && d.data[j]}}</td>
-    </tr>
-  </table>
-</div>-->
+  <div>
+    <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
+      [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType"
+      (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+  </div>
+  <!--<div class="col-md-6" style="margin-bottom: 10px">
+    <table class="table table-responsive table-condensed">
+      <tr>
+        <th *ngFor="let label of lineChartLabels">{{label}}</th>
+      </tr>
+      <tr *ngFor="let d of lineChartData">
+        <td *ngFor="let label of lineChartLabels; let j=index">{{d && d.data[j]}}</td>
+      </tr>
+    </table>
+  </div>-->
 </div>

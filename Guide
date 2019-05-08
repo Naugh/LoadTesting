@@ -1,0 +1,12 @@
+Daemon Docker
+---------------
+1-Create environment variable DOCKER_HOST
+
+	sudo -H gedit /etc/environment
+	write:
+	DOCKER_HOST="tcp://0.0.0.0:2375"
+
+2-Start docker service
+	sudo service docker start
+
+
