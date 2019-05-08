@@ -1,5 +1,7 @@
 package main;
 
+import java.io.IOException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +27,14 @@ public class FileRestController {
 		}
 
 		// DockerUtils.setFile(uploadfile.getInputStream());
-		DockerUtils.setFile(uploadfile);
+		try {
+			DockerUtils.setFile(uploadfile);
+		} catch (IOException e) {
+			System.out.println("DockerUtils.setFile() error");
+			System.out.println(e.getMessage());
+			return new ResponseEntity<String>(uploadfile.getName() + "e.getMessage()", HttpStatus.BAD_REQUEST);
+			
+		}
 		// saveUploadedFiles(Arrays.asList(uploadfile));
 
 		// return new ResponseEntity("Successfully uploaded - " +

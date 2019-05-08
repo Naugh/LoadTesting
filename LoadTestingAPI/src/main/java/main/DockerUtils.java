@@ -120,16 +120,11 @@ public class DockerUtils {
 		}
 	}
 
-	public static void setFile(MultipartFile uploadfile) {
-		try {
-			File dest = new File(INPUT_PATH);
-			if(dest.exists())
-				dest.delete();
-			uploadfile.transferTo(dest);
-		} catch (IOException e) {
-			System.out.println("DockerUtils.setFile() error");
-			System.out.println(e.getMessage());
-		}
+	public static void setFile(MultipartFile uploadfile) throws IOException{
+		File dest = new File(INPUT_PATH);
+		if(dest.exists())
+			dest.delete();
+		uploadfile.transferTo(dest);
 	}
 
 	private static void cleanContainers() {
