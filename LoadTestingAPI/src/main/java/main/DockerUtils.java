@@ -24,8 +24,9 @@ public class DockerUtils {
 	private final static String JMETER_MASTER = "naughtyth/jmeter-master";
 	private final static String JMETER_SLAVE = "naughtyth/jmeter-slave";
 	
-	private final static String INPUT_PATH = "/files/test.jmx";
-	private final static String RESULT_PATH = "/files/results.csv";
+	private final static String FILES_PATH_DIR = "/files";
+	private final static String INPUT_PATH = FILES_PATH_DIR + "/test.jmx";
+	private final static String RESULT_PATH = FILES_PATH_DIR + "/results.csv";
 
 	private static DockerClient docker = null;
 
@@ -125,6 +126,7 @@ public class DockerUtils {
 		if(dest.exists())
 			dest.delete();
 		uploadfile.transferTo(dest);
+		System.out.println("File transfered");
 	}
 
 	private static void cleanContainers() {
@@ -157,9 +159,12 @@ public class DockerUtils {
 	}
 	
 	public static String showPath(){
-			File curDir = new File("/files");
+			File curDir = new File(FILES_PATH_DIR);
 			File[] filesList = curDir.listFiles();
-			String names = "";
+			if(filesList.length == 0) {
+				return FILES_PATH_DIR + "dir is empty";
+			}
+			String names = "Directory: " + FILES_PATH_DIR + "\n";
 			for (File f : filesList) {
 				/*
 				 * if(f.isDirectory()) getAllFiles(f); if(f.isFile()){

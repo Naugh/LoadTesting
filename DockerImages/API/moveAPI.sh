@@ -3,3 +3,4 @@
 cd ..
 cd ..
 mv LoadTestingAPI/target/LoadTestingAPI-0.0.1-SNAPSHOT.jar DockerImages/API/LoadTestingAPI.jar
+read -p "Press any key"

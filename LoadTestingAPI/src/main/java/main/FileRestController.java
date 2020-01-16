@@ -29,10 +29,10 @@ public class FileRestController {
 		// DockerUtils.setFile(uploadfile.getInputStream());
 		try {
 			DockerUtils.setFile(uploadfile);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			System.out.println("DockerUtils.setFile() error");
 			System.out.println(e.getMessage());
-			return new ResponseEntity<String>(uploadfile.getName() + "e.getMessage()", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>(uploadfile.getName() + "ERROR: " + e.getMessage(), HttpStatus.BAD_REQUEST);
 			
 		}
 		// saveUploadedFiles(Arrays.asList(uploadfile));
