@@ -2,7 +2,7 @@
 FROM alpine
 
 # JMeter version
-ARG JMETER_VERSION=3.3
+ARG JMETER_VERSION=5.4.1
 
 # Install few utilities
 RUN apk add --update --no-cache openjdk8-jre-base
