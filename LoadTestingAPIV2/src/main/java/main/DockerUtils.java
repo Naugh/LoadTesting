@@ -44,11 +44,13 @@ public class DockerUtils {
 
 		if (docker == null) {
 			try {
-				DockerClientConfig standard = DefaultDockerClientConfig.createDefaultConfigBuilder().build();
+				DockerClientConfig standard = DefaultDockerClientConfig.createDefaultConfigBuilder()
+						.withDockerTlsVerify(false)
+						.build();
 				DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
 					    .dockerHost(standard.getDockerHost())
-					    .sslConfig(standard.getSSLConfig())	
-					    .maxConnections(100)
+//					    .sslConfig(standard.getSSLConfig())	
+//					    .maxConnections(100)
 					    .build();	
 				
 				docker = DockerClientImpl.getInstance(standard, httpClient);
