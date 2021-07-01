@@ -28,16 +28,16 @@ public class ResultRestController {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value = "/all", method = RequestMethod.GET)
-	public ResponseEntity<JMeterResults> getSavedResults() {
-		File r = DockerUtils.getResultFile();
-		if (r.exists()) {
-			JMeterResults jmr = new JMeterResults();
-			jmr.loadFile(r);
-			return new ResponseEntity<>(jmr, HttpStatus.OK);
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	}
+//	@RequestMapping(value = "/all", method = RequestMethod.GET)
+//	public ResponseEntity<JMeterResults> getSavedResults() {
+//		File r = DockerUtils.getResultFile();
+//		if (r.exists()) {
+//			JMeterResults jmr = new JMeterResults();
+//			jmr.loadFile(r);
+//			return new ResponseEntity<>(jmr, HttpStatus.OK);
+//		}
+//		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//	}
 
 //	@RequestMapping(value = "", method = RequestMethod.POST)
 //	public ResponseEntity<JMeterResults> saveResult(@RequestBody JMeterResults jmr) {

@@ -1,5 +1,7 @@
 package main;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,6 +36,11 @@ public class OtherRestController {
 			return false;
 		}
 		
+	}
+	
+	@RequestMapping(value = "/log", method = RequestMethod.GET)
+	public ResponseEntity<String> getlog(){
+		return new ResponseEntity<String>(DockerUtils.getJMeterLog(), HttpStatus.OK);
 	}
 
 }

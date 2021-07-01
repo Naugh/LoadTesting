@@ -2,6 +2,8 @@ package main;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,7 @@ public class DockerUtils {
 	private final static String FILES_PATH_DIR = "/files";
 	private final static String INPUT_PATH = FILES_PATH_DIR + "/test.jmx";
 	private final static String RESULT_PATH = FILES_PATH_DIR + "/results.csv";
+	private final static String LOG_PATH = FILES_PATH_DIR + "/jmeter.log";
 
 	private static DockerClient docker = null;
 
@@ -203,5 +206,18 @@ public class DockerUtils {
 		}
 		startMaster();
 		return f;
+	}
+	
+	public static String getJMeterLog() {
+		File f = new File(LOG_PATH);
+		if (f.exists()) {
+			try {
+				return new String(Files.readAllBytes(Paths.get(LOG_PATH)));
+			} catch (IOException e) {
+				e.printStackTrace();
+				return "Reading file error";
+			}
+		}else
+			return "jmeter.log not found";
 	}
 }
