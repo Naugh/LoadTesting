@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/result")
 public class ResultRestController {
 
-	@Autowired
-	private JMeterResultsRepository jmRepository;
+//	@Autowired
+//	private JMeterResultsRepository jmRepository;
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public ResponseEntity<JMeterResults> getResultFile() {
@@ -39,16 +39,16 @@ public class ResultRestController {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
-	@RequestMapping(value = "", method = RequestMethod.POST)
-	public ResponseEntity<JMeterResults> saveResult(@RequestBody JMeterResults jmr) {
-		jmRepository.save(jmr);
-		return new ResponseEntity<>(jmr, HttpStatus.OK);
-	}
-	
-	@RequestMapping(value = "", method = RequestMethod.DELETE)
-	public ResponseEntity<JMeterResults> deleteResult(JMeterResults jmr) {
-		jmRepository.delete(jmr);
-		return new ResponseEntity<>(jmr, HttpStatus.OK);
-	}
+//	@RequestMapping(value = "", method = RequestMethod.POST)
+//	public ResponseEntity<JMeterResults> saveResult(@RequestBody JMeterResults jmr) {
+//		jmRepository.save(jmr);
+//		return new ResponseEntity<>(jmr, HttpStatus.OK);
+//	}
+//	
+//	@RequestMapping(value = "", method = RequestMethod.DELETE)
+//	public ResponseEntity<JMeterResults> deleteResult(JMeterResults jmr) {
+//		jmRepository.delete(jmr);
+//		return new ResponseEntity<>(jmr, HttpStatus.OK);
+//	}
 	
 }
