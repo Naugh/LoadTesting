@@ -23,7 +23,7 @@ public class DockerUtils {
 	private final static String JMETER_BASE = "naughtyth/jmeter-base";
 	private final static String JMETER_MASTER = "naughtyth/jmeter-master";
 	private final static String JMETER_SLAVE = "naughtyth/jmeter-slave";
-	
+
 	private final static String FILES_PATH_DIR = "/files";
 	private final static String INPUT_PATH = FILES_PATH_DIR + "/test.jmx";
 	private final static String RESULT_PATH = FILES_PATH_DIR + "/results.csv";
@@ -33,7 +33,7 @@ public class DockerUtils {
 	private static String api = null;
 	private static String master = null;
 	private static ArrayList<String> slaves = null;
-	
+
 	private static String ipSlaves = null;
 
 	public static void initDocker(int n) {
@@ -42,69 +42,59 @@ public class DockerUtils {
 				docker = DefaultDockerClient.fromEnv().build();
 			} catch (DockerCertificateException e) {
 				e.printStackTrace();
-				System.out.println("DockerUtils.initDocker() error docker client");
+				System.err.println("DockerUtils.initDocker() error docker client");
 			}
 
 		}
 		if (api == null) {
 			try {
 				List<Container> list = docker.listContainers(ListContainersParam.filter("name", "loadtestingAPI"));
-				if (!list.isEmpty())
+				if (!list.isEmpty()) {
 					api = list.get(0).id();
-				else
+					docker.pull(JMETER_BASE);
+					docker.pull(JMETER_SLAVE);
+					docker.pull(JMETER_MASTER);
+				} else
 					throw new DockerException("Container API name wrong!!");
 			} catch (DockerException | InterruptedException e) {
-				System.out.println(e.getMessage());
-				System.out.println("DockerUtils.initDocker() error docker api volume update");
+				System.err.println(e.getMessage());
+				System.err.println("DockerUtils.initDocker() error docker api volume update");
 			}
 		}
+		cleanContainers();
 		if (slaves == null) {
 			try {
-				cleanContainers();
-				docker.pull(JMETER_BASE);
-				docker.pull(JMETER_SLAVE);
 				slaves = new ArrayList<String>();
 				for (int i = 0; i < n; i++) {
 					slaves.add(createContainer(JMETER_SLAVE, "jmeterslave" + i));
 				}
 			} catch (DockerException | InterruptedException e) {
-				System.out.println("DockerUtils.initDocker() error docker slave");
-				System.out.println(e.getMessage());
+				System.err.println("DockerUtils.initDocker() error docker slave");
+				System.err.println(e.getMessage());
 			}
 		}
 		if (master == null) {
 			try {
-				docker.pull(JMETER_MASTER);
-				//TODO 
-				//quitar el if api -TEST-
-				if (api != null)
-					master = createContainer(JMETER_MASTER, "jmetermaster", true);
-				else
-					master = createContainer(JMETER_MASTER, "jmetermaster", false);
+				master = createContainer(JMETER_MASTER, "jmetermaster");
 			} catch (DockerException | InterruptedException e) {
-				System.out.println("DockerUtils.initDocker() error docker master");
-				System.out.println(e.getMessage());
+				System.err.println("DockerUtils.initDocker() error docker master");
+				System.err.println(e.getMessage());
 			}
 		}
 
 	}
 
 	public static String createContainer(String img, String tag) throws DockerException, InterruptedException {
-		return createContainer(img, tag, false);
-	}
-
-	public static String createContainer(String img, String tag, boolean isMaster)
-			throws DockerException, InterruptedException {
 		ContainerConfig config = null;
-		//if (isMaster) {
-		if(img.equals(JMETER_MASTER)){
+		boolean isMaster = img.equals(JMETER_MASTER);
+		if (isMaster) {
 			HostConfig hostConfig = HostConfig.builder().volumesFrom(api).build();
-			config = ContainerConfig.builder().image(img).env("IPSLAVES="+ipSlaves).hostConfig(hostConfig).build();
+			config = ContainerConfig.builder().image(img).env("IPSLAVES=" + ipSlaves).hostConfig(hostConfig).build();
 		} else {
 			config = ContainerConfig.builder().image(img).build();
 		}
 		final ContainerCreation container = docker.createContainer(config, tag);
-		if(!isMaster){
+		if (!isMaster) {
 			docker.startContainer(container.id());
 			addIP(docker.inspectContainer(container.id()).networkSettings().ipAddress());
 		}
@@ -117,13 +107,13 @@ public class DockerUtils {
 			System.out.println(docker.version().toString());
 		} catch (DockerException | InterruptedException e) {
 			e.printStackTrace();
-			System.out.println("DockerUtils.showVersion() error");
+			System.err.println("DockerUtils.showVersion() error");
 		}
 	}
 
-	public static void setFile(MultipartFile uploadfile) throws IOException{
+	public static void setFile(MultipartFile uploadfile) throws IOException {
 		File dest = new File(INPUT_PATH);
-		if(dest.exists())
+		if (dest.exists())
 			dest.delete();
 		uploadfile.transferTo(dest);
 		System.out.println("File transfered");
@@ -141,6 +131,7 @@ public class DockerUtils {
 			}
 			master = null;
 			slaves = null;
+			ipSlaves = null;
 		} catch (DockerException | InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -157,34 +148,34 @@ public class DockerUtils {
 			e.printStackTrace();
 		}
 	}
-	
-	public static String showPath(){
-			File curDir = new File(FILES_PATH_DIR);
-			File[] filesList = curDir.listFiles();
-			if(filesList.length == 0) {
-				return FILES_PATH_DIR + "dir is empty";
-			}
-			String names = "Directory: " + FILES_PATH_DIR + "\n";
-			for (File f : filesList) {
-				/*
-				 * if(f.isDirectory()) getAllFiles(f); if(f.isFile()){
-				 */
-				names+=f.getName()+"\n";
-				// }
-			}
-			return names;
+
+	public static String showPath() {
+		File curDir = new File(FILES_PATH_DIR);
+		File[] filesList = curDir.listFiles();
+		if (filesList.length == 0) {
+			return FILES_PATH_DIR + "dir is empty";
+		}
+		String names = "Directory: " + FILES_PATH_DIR + "\n";
+		for (File f : filesList) {
+			/*
+			 * if(f.isDirectory()) getAllFiles(f); if(f.isFile()){
+			 */
+			names += f.getName() + "\n";
+			// }
+		}
+		return names;
 
 	}
-	
-	private static void addIP(String ip){
-		if(ipSlaves==null){
+
+	private static void addIP(String ip) {
+		if (ipSlaves == null) {
 			ipSlaves = ip;
-		}else{
-			ipSlaves=ipSlaves + "," + ip;
+		} else {
+			ipSlaves = ipSlaves + "," + ip;
 		}
 	}
-	
-	public static void startMaster(){
+
+	public static void startMaster() {
 		try {
 			System.out.println("Processing file");
 			docker.startContainer(master);
@@ -195,8 +186,8 @@ public class DockerUtils {
 			e.printStackTrace();
 		}
 	}
-	
-	public static void waitMaster(){
+
+	public static void waitMaster() {
 		try {
 			docker.waitContainer(master);
 		} catch (DockerException | InterruptedException e) {
@@ -204,10 +195,10 @@ public class DockerUtils {
 			e.printStackTrace();
 		}
 	}
-	
-	public static File getResultFile(){
+
+	public static File getResultFile() {
 		File f = new File(RESULT_PATH);
-		if(f.exists()){
+		if (f.exists()) {
 			f.delete();
 		}
 		startMaster();
