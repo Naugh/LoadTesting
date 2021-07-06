@@ -15,7 +15,9 @@ RUN   mkdir /jmeter \
       && rm apache-jmeter-$JMETER_VERSION.tgz \
       && wget https://jmeter-plugins.org/downloads/file/JMeterPlugins-ExtrasLibs-1.4.0.zip \
       && unzip -o JMeterPlugins-ExtrasLibs-1.4.0.zip -d /jmeter/apache-jmeter-$JMETER_VERSION/ \
-      && rm JMeterPlugins-ExtrasLibs-1.4.0.zip
+      && rm JMeterPlugins-ExtrasLibs-1.4.0.zip \
+      && cd /jmeter/apache-jmeter-$JMETER_VERSION/lib/ext \
+      && wget https://github.com/NovatecConsulting/JMeter-InfluxDB-Writer/releases/download/v-1.2/JMeter-InfluxDB-Writer-plugin-1.2.jar
 
 # Set JMeter Home
 ENV JMETER_HOME /jmeter/apache-jmeter-$JMETER_VERSION/
